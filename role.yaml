@@ -1,0 +1,23 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: guitarcenter
+  name: writer
+rules:
+- apiGroups: ["","kool.karmalabs.local"] # "" indicates the core API group
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: writer
+  namespace: guitarcenter
+subjects:
+- kind: ServiceAccount
+  name: default 
+  namespace: guitarcenter
+roleRef:
+  kind: Role
+  name: writer 
+  apiGroup: rbac.authorization.k8s.io

@@ -1,3 +1,9 @@
+# Advisor
+
+This Controller was based/forked from KARMAB (https://github.com/karmab/samplecontroller) and was modified to be used at QCON SP 2018 :)
+
+All the credits goes here to the creator, and I've just modified this for my needs :)
+
 # samplecontroller repository
 
 [![](https://images.microbadger.com/badges/image/karmab/samplecontroller.svg)](https://microbadger.com/images/karmab/samplecontroller "Get your own image badge on microbadger.com")
@@ -7,45 +13,23 @@ This is a simple controller to demonstrate how to interact within kubernetes usi
 ## Requisites
 
 - a running kubernetes/openshift cluster
+- a Namespace called `guitarcenter` (as I'm lazy and this is hardcoded :P )
 
 ## Running
 
-on minikub/gce
 
 ```
-kubectl run samplecontroller --image=karmab/samplecontroller --restart=Always
-kubectl run sampleui --image=karmab/sampleui
-kubectl expose deployment sampleui --port=9000 --target-port=9000 --type=LoadBalancer
-```
-
-- on openshift ( enough privileges needed as i m checking guitars cluster wide)
-
-```
-oc new-project guitarcenter
-oc adm policy add-cluster-role-to-user cluster-admin -z default -n guitarcenter
-oc new-app karmab/samplecontroller
-```
-
-Note that the guitar custom resource definition gets created when launching the controller
-
-## How to use
-
-Create some guitars and see the review made for you
-
-```
-oc create -f crd/stratocaster.yml
-oc create -f crd/lespaul.yml
-oc get guitars -o yaml
+kubectl create ns guitarcenter
+kubectl create -f https://raw.githubusercontent.com/rikatz/samplecontroller/master/guitar.yml
+kubectl create -f https://raw.githubusercontent.com/rikatz/samplecontroller/master/role.yml
+kubectl run crdcontroller --image=rpkatz/crdcontroller:v0.8 --restart=Always -n guitarcenter
+kubectl run crdui --image=rpkatz/crdui:v0.6 --env=KUBERNETES_SERVICE_HOST=kubernetes.default -n guitarcenter
+kubectl expose deployment crdui --port=9000 --target-port=9000 --type=NodePort -n guitarcenter
 ```
 
 ## UI
 
-To ease testing, you can also use the provided UI to list, create and delete guitars
-
-```
-oc new-app karmab/sampleui
-oc expose svc sampleui
-```
+To ease testing, you can also use the provided UI to list, create and delete guitars. Access the UI through the created NodePort (`kubectl get svc -n guitarcenter crdui`)
 
 ## BONUS
 
@@ -67,10 +51,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-## Problems?
-
-Send me a mail at [karimboumedhel@gmail.com](mailto:karimboumedhel@gmail.com) !
-
-Mc Fly!!!
-
-karmab

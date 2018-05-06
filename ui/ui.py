@@ -6,7 +6,7 @@ import os
 
 DOMAIN = 'kool.karmalabs.local'
 VERSION = 'v1'
-NAMESPACE = os.environ['GUITAR_NAMESPACE'] if 'GUITAR_NAMESPACE' in os.environ else 'guitarcenter'
+NAMESPACE = 'guitarcenter'
 goodbrands = ['coleclark', 'fender', 'gibson', 'ibanez', 'martin', 'seagull', 'squier', 'washburn']
 badbrands = ['epiphone', 'guild', 'gretsch', 'jackson', 'ovation', 'prs', 'rickenbauer', 'taylor', 'yamaha']
 
@@ -60,7 +60,7 @@ def guitarlist():
     display guitars
     """
     crds = client.CustomObjectsApi()
-    guitars = crds.list_cluster_custom_object(DOMAIN, VERSION, 'guitars')["items"]
+    guitars = crds.list_namespaced_custom_object(DOMAIN, VERSION, NAMESPACE, 'guitars')["items"]
     guitars = sorted(guitars, key=lambda x: (x.get("spec")["brand"], x.get("metadata")["name"]))
     return render_template("guitarlist.html", title="Guitars", guitars=guitars)
 
@@ -75,7 +75,6 @@ def index():
 
 def run():
     if 'KUBERNETES_PORT' in os.environ:
-        # os.environ['KUBERNETES_SERVICE_HOST'] = 'kubernetes'
         config.load_incluster_config()
     else:
         config.load_kube_config()

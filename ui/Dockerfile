@@ -1,5 +1,5 @@
 FROM karmab/client-python-kubernetes
-MAINTAINER Karim Boumedhel <karimboumedhel@gmail.com>
+MAINTAINER Ricardo Katz <ricardo.katz@gmail.com>
 
 EXPOSE 9000
 
