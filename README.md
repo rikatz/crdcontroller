@@ -21,7 +21,7 @@ This is a simple controller to demonstrate how to interact within kubernetes usi
 ```
 kubectl create ns guitarcenter
 kubectl create -f https://raw.githubusercontent.com/rikatz/samplecontroller/master/guitar.yml
-kubectl create -f https://raw.githubusercontent.com/rikatz/samplecontroller/master/role.yml
+kubectl create -f https://raw.githubusercontent.com/rikatz/samplecontroller/master/role.yaml
 kubectl run crdcontroller --image=rpkatz/crdcontroller:v0.8 --restart=Always -n guitarcenter
 kubectl run crdui --image=rpkatz/crdui:v0.6 --env=KUBERNETES_SERVICE_HOST=kubernetes.default -n guitarcenter
 kubectl expose deployment crdui --port=9000 --target-port=9000 --type=NodePort -n guitarcenter
